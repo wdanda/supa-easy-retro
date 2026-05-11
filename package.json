@@ -1,0 +1,26 @@
+{
+  "name": "supa-easy-retro",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "cd retro-frontend && npm run build"
+  },
+  "engines": {
+    "node": "22.x",
+    "npm": "10.x"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.4",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "express-rate-limit": "^7.5.0",
+    "pdfkit": "^0.13.0",
+    "socket.io": "^4.8.3"
+  },
+  "description": ""
+}

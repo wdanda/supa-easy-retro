@@ -1,0 +1,28 @@
+.card {
+  background: var(--bg-surface);
+  color: var(--text-main);
+  border: 2px solid #333;
+  padding: 12px;
+  font-size: 0.95rem;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  min-height:56px;
+  box-shadow: 4px 4px 0 var(--col-accent);
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+  &:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 var(--col-accent); }
+
+  .card-body { display:flex; align-items:center; gap:12px; width:100%; }
+  .card-text { flex:1; font-family: 'CyberMono', monospace; white-space:pre-wrap; }
+  .card-actions { display:flex; gap:8px; align-items:center; }
+
+  /* Upvote: minimal, borderless; accent on hover */
+  .upvote {
+    background: transparent; border: none; color: var(--text-main); font-weight:700; cursor:pointer; padding:4px 6px;
+  }
+  .upvote:hover { color: var(--col-accent); }
+
+  /* Delete hidden until card hover */
+  .delete { background: transparent; border: none; color: rgba(255,255,255,0.2); cursor: pointer; padding:4px 6px; display:none; }
+  &:hover .delete { display:inline-block; color: #fff; }
+}

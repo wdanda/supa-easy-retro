@@ -1,0 +1,45 @@
+.app-header {
+  height: 72px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0 1.25rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg-surface);
+  color: var(--text-main);
+  z-index: 60;
+  border-bottom: 2px solid var(--text-main);
+  box-shadow: 0 0 0 transparent;
+
+  .hamburger {
+    background: transparent;
+    border: 2px solid var(--text-main);
+    padding: 10px;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .center {
+    flex: 1;
+    text-align: left;
+    display:flex;
+    flex-direction:row;
+    gap:1rem;
+    align-items:center;
+    .team { font-size: 1.05rem; }
+    .date { background: transparent; color: var(--accent-green); font-family: 'CyberMono', monospace; font-size: 0.95rem; }
+  }
+
+  .export, .theme-toggle {
+    background: transparent;
+    color: var(--text-main);
+    border: 2px solid var(--text-main);
+    padding: 8px 10px;
+    cursor: pointer;
+  }
+  .export.cyber-interactive { box-shadow: 4px 4px 0px var(--accent-yellow); }
+}

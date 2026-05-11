@@ -1,0 +1,61 @@
+
+/* Cyber-Brutalist global theme */
+
+:root {
+  --bg-void: #050505;
+  --bg-surface: #121212;
+  --text-main: #F0F0F0;
+  --accent-cyan: #00F0FF;
+  --accent-magenta: #FF003C;
+  --accent-yellow: #FCEE0A;
+  --accent-green: #39FF14;
+}
+
+/* Global reset + brutal rules */
+* { box-sizing: border-box; border-radius: 0px !important; }
+html, body { height: 100%; margin: 0; padding: 0; background: var(--bg-void); color: var(--text-main); }
+
+/* Typography */
+@font-face { font-family: 'CyberWide'; src: local('Impact'); font-weight: 700; }
+@font-face { font-family: 'CyberMono'; src: local('Courier New'); font-weight: 400; }
+body { font-family: 'CyberMono', monospace; font-size: 15px; }
+
+/* Headers & buttons: wide bold geometric sans, uppercase */
+h1,h2,h3,h4,h5,button,.app-header .team { font-family: 'CyberWide', Arial, sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* App main spacing */
+.app-main { padding-top: 72px; min-height: 100vh; }
+
+/* Thick borders on interactive elements */
+button,input,textarea,select { border: 2px solid var(--text-main); background: transparent; color: var(--text-main); }
+
+/* No blurry shadows — use hard offset shadows */
+.hard-shadow { box-shadow: 4px 4px 0px rgba(0,0,0,0.4); }
+
+/* Tactile hover state for interactive elements */
+.cyber-interactive {
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
+.cyber-interactive:hover { transform: translate(-2px,-2px); }
+
+/* Increase shadow on hover */
+.cyber-interactive.shadow-cyan:hover { box-shadow: 6px 6px 0px var(--accent-cyan); }
+.cyber-interactive.shadow-magenta:hover { box-shadow: 6px 6px 0px var(--accent-magenta); }
+.cyber-interactive.shadow-yellow:hover { box-shadow: 6px 6px 0px var(--accent-yellow); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); }
+
+/* Drag cursors */
+.cdk-drag { cursor: grab; }
+.cdk-drag.cdk-drag-dragging { cursor: grabbing !important; }
+
+/* Helpers for column accents via nth-child */
+.board { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem; height: calc(100vh - 72px); padding: 2rem; }
+.board .column:nth-child(1) { --col-accent: var(--accent-cyan); }
+.board .column:nth-child(2) { --col-accent: var(--accent-magenta); }
+.board .column:nth-child(3) { --col-accent: var(--accent-yellow); }
+
+.retro-quiet { font-family: 'CyberMono', monospace; }
+

@@ -1,0 +1,12 @@
+<input 
+    type="text" 
+    placeholder="type to search..." 
+    (input)="onSearchInput($event)"
+    class="hacker-input"
+  >
+
+<div class="board">
+  <div class="column" *ngFor="let col of columns$ | async">
+    <app-column [column]="col"></app-column>
+  </div>
+</div>

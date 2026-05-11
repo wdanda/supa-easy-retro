@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: supa-easy-retro
+    env: node
+    buildCommand: npm ci && cd retro-frontend && npm ci && npm run build
+    startCommand: node server.js
+    envVars:
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: NODE_ENV
+        value: production

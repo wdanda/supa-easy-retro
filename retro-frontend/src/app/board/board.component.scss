@@ -1,0 +1,19 @@
+.board {
+  /* grid is defined globally; keep local padding control */
+  padding: 0;
+  margin: 0;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  background: transparent;
+  padding: 8px;
+}
+
+.column .column-surface {
+  background: var(--bg-surface);
+  border: 2px solid rgba(255,255,255,0.06);
+  padding: 20px;
+  height: 100%;
+}

@@ -1,0 +1,18 @@
+.dashboard { padding: 80px 16px 16px; color: #ddd; background: #121212; min-height: 100vh;
+  .header-row { display:flex; gap:1rem; align-items:center; }
+  .create-panel { margin-top: 12px; display:flex; flex-direction:column; gap:8px;
+    input { background:#1e1e1e; border:1px solid #2b2b2b; padding:8px; color:#fff; }
+    .row { display:flex; align-items:center; gap:8px; }
+    .preview { color:#fff; font-size:0.95rem; }
+    .disclaimer { color:#a0a0a0; font-size:0.85rem; }
+    .actions { display:flex; gap:8px; }
+  }
+  .board-list { margin-top: 12px; list-style:none; padding:0;
+    li { display:flex; justify-content:space-between; align-items:center; padding:8px; border-bottom:1px solid #222; }
+  }
+}
+
+.board-list li { flex-direction: column; align-items: flex-start; gap: 8px; }
+.board-list .url { color:#9ec8ff; display:flex; gap:8px; align-items:center; }
+.board-list .url a { color:#9ec8ff; text-decoration:none; }
+

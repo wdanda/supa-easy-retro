@@ -1,0 +1,32 @@
+.column-surface {
+  display:flex;
+  flex-direction:column;
+  height: calc(100vh - 120px);
+}
+
+.column-header {
+  display:flex;
+  flex-direction:column;
+  gap:0.75rem;
+  margin-bottom:0.75rem;
+
+  .col-title {
+    padding: 12px 10px;
+    color: #000;
+    h2 { margin:0; font-size:1.15rem; font-weight:900; }
+  }
+
+  .terminal-add {
+    display:flex; align-items:center; gap:8px;
+    background: #000; padding:6px; border:2px solid var(--text-main);
+  }
+  .terminal-add .caret { color: var(--accent-green); font-family: 'CyberWide'; padding:0 6px; }
+  .terminal-input {
+    flex:1; background: transparent; color: var(--accent-green); border:none; outline:none; font-family: 'CyberMono'; padding:6px 8px;
+  }
+  /* Focus uses the parent column accent color via --col-accent */
+  .terminal-input:focus { box-shadow: 4px 4px 0px var(--col-accent); }
+}
+
+.card-list { display:flex; flex-direction:column; gap:0.6rem; overflow:auto; padding-bottom:12px; }
+

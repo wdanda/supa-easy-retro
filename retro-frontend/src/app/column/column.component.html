@@ -1,0 +1,17 @@
+<div class="column-surface">
+  <div class="column-header">
+    <div class="col-title" [style.background]="'var(--col-accent)'"><h2>{{ column.name }}</h2></div>
+
+    <form class="terminal-add" (submit)="addCard(); $event.preventDefault()">
+      <span class="caret">&gt;</span>
+      <input class="terminal-input" [(ngModel)]="newCardText" name="newCardText" maxlength="200" placeholder="Add card..." autocomplete="off" />
+      <!-- Intentionally no visible submit button — press Enter to add -->
+    </form>
+  </div>
+
+  <div cdkDropList [cdkDropListData]="column.cards" (cdkDropListDropped)="drop($event)" class="card-list">
+    <div *ngFor="let card of column.cards; let i = index" cdkDrag>
+      <app-card [card]="card" (delete)="deleteCard(card.id)" (upvote)="upvoteCard(card.id)"></app-card>
+    </div>
+  </div>
+</div>

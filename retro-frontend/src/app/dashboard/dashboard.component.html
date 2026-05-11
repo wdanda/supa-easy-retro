@@ -1,0 +1,43 @@
+<section class="dashboard">
+  <div class="header-row">
+    <h2>Boards</h2>
+    <div class="count">Active Boards: {{ boards.length }} / {{ limit }}</div>
+    <button class="create btn-primary" (click)="toggleCreate()">Create</button>
+  </div>
+
+  <div class="create-panel" *ngIf="creating">
+    <input placeholder="Team base name" [(ngModel)]="teamName" />
+    <div class="row">
+      <label>Retro Date</label>
+      <input type="date" [(ngModel)]="date" (ngModelChange)="saveDate()" />
+    </div>
+    <div class="preview">Preview name: <strong>{{ getFinalName() }}</strong></div>
+    <input placeholder="Password (optional)" [(ngModel)]="password" type="password" />
+    <div class="disclaimer">Note: Retro boards are automatically deleted after 2 weeks.</div>
+    <div class="quota-status">
+      <span *ngIf="!quotaMessage">Your created: {{ createdLocal.length }} / {{ limit }}</span>
+      <span class="quota-warning" *ngIf="quotaMessage">{{ quotaMessage }}</span>
+    </div>
+    <div class="actions">
+      <button class="btn-primary" (click)="create()" [disabled]="createdLocal.length >= limit">Create</button>
+      <button (click)="toggleCreate()">Cancel</button>
+    </div>
+  </div>
+
+  <ul class="board-list">
+    <li *ngFor="let b of boards">
+      <div class="meta">
+        <div class="name">{{ b.teamName }}</div>
+        <div class="date">{{ b.createdAt | date:'short' }}</div>
+      </div>
+      <div class="url">
+        <a [href]="getBoardUrl(b.id)" target="_blank">{{ getBoardUrl(b.id) }}</a>
+        <button (click)="copyUrl(b.id, getBoardUrl(b.id))">{{ copied[b.id] ? 'Copied' : 'Copy' }}</button>
+      </div>
+      <div class="actions">
+        <button (click)="openBoard(b.id)">Open</button>
+        <button (click)="deleteBoard(b.id)">Delete</button>
+      </div>
+    </li>
+  </ul>
+</section>

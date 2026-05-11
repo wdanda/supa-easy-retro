@@ -1,0 +1,7 @@
+.password-gate { display:flex; align-items:center; justify-content:center; min-height: calc(100vh - 64px); background:#121212;
+  .card { background:#1e1e1e; padding:20px; border-radius:8px; color:#fff; width:320px; text-align:center;
+    input { margin-top:8px; width:100%; padding:8px; background:#2d2d2d; border:1px solid #333; color:#fff; }
+    .actions { margin-top:8px; }
+    .error { color:#ff6b6b; margin-top:8px; }
+  }
+}
