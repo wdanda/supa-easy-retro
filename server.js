@@ -1,6 +1,8 @@
 // server.js
 // Node.js + Express + Socket.io Scrum Retro backend (Supabase)
 
+require('dotenv').config();
+
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
@@ -42,6 +44,7 @@ app.use(express.static(FRONTEND_DIST));
 const MAX_BOARDS_PER_IP = 30;
 const MAX_BOARDS_PER_USER = 10;
 const BOARD_LIFESPAN_MS = 14 * 24 * 60 * 60 * 1000; // 2 weeks
+const inFlightUpvotes = new Set();
 
 let createUserLimiter = (req, res, next) => next();
 let createBoardLimiter = (req, res, next) => next();
@@ -235,51 +238,79 @@ app.get('/api/boards/:boardId/pdf', async (req, res) => {
 // --- Socket.io events (per board, all async) ---
 
 io.on('connection', (socket) => {
-  socket.on('joinBoard', async ({ boardId, password }) => {
+  socket.on('joinBoard', async ({ boardId, password, userId }) => {
     await cleanupExpiredBoards();
     const board = await getBoard(boardId);
     if (!board) return socket.emit('error', 'Board not found');
     if (board.password_hash) {
       if (!bcrypt.compareSync(password || '', board.password_hash)) return socket.emit('error', 'Incorrect password');
     }
+    socket.data.userId = userId || null;
     socket.join(boardId);
     socket.emit('boardState', board.columns);
   });
 
-  socket.on('addCard', async ({ boardId, columnKey, text }) => {
+  socket.on('addCard', async ({ boardId, columnKey, text, userId }) => {
     const board = await getBoard(boardId);
     if (!board) return;
+    const authorId = socket.data.userId || userId;
+    if (!authorId) return socket.emit('error', 'Unauthorized');
     const col = board.columns.find(c => c.key === columnKey);
     if (col && text && text.trim()) {
-      const card = { id: generateId(), text: text.trim(), upvotes: 0 };
+      const card = { id: generateId(), text: text.trim(), upvotes: 0, authorId, upvotedBy: [] };
       col.cards.unshift(card);
       await saveColumns(boardId, board.columns);
       io.to(boardId).emit('boardState', board.columns);
     }
   });
 
-  socket.on('deleteCard', async ({ boardId, columnKey, cardId }) => {
+  socket.on('deleteCard', async ({ boardId, columnKey, cardId, userId }) => {
     const board = await getBoard(boardId);
     if (!board) return;
+    const requesterId = socket.data.userId || userId;
+    if (!requesterId) return socket.emit('error', 'Unauthorized');
     const col = board.columns.find(c => c.key === columnKey);
     if (col) {
+      const targetCard = col.cards.find(c => c.id === cardId);
+      if (!targetCard) return;
+      if (!targetCard.authorId || targetCard.authorId !== requesterId) {
+        socket.emit('error', 'Only the creator can delete this card');
+        socket.emit('boardState', board.columns);
+        return;
+      }
       col.cards = col.cards.filter(c => c.id !== cardId);
       await saveColumns(boardId, board.columns);
       io.to(boardId).emit('boardState', board.columns);
     }
   });
 
-  socket.on('upvoteCard', async ({ boardId, columnKey, cardId }) => {
+  socket.on('upvoteCard', async ({ boardId, columnKey, cardId, userId }) => {
     const board = await getBoard(boardId);
     if (!board) return;
-    const col = board.columns.find(c => c.key === columnKey);
-    if (col) {
-      const card = col.cards.find(c => c.id === cardId);
-      if (card) {
-        card.upvotes++;
-        await saveColumns(boardId, board.columns);
-        io.to(boardId).emit('boardState', board.columns);
+    const requesterId = socket.data.userId || userId;
+    if (!requesterId) return socket.emit('error', 'Unauthorized');
+    const upvoteKey = `${boardId}:${columnKey}:${cardId}:${requesterId}`;
+    if (inFlightUpvotes.has(upvoteKey)) return;
+    inFlightUpvotes.add(upvoteKey);
+
+    try {
+      const col = board.columns.find(c => c.key === columnKey);
+      if (col) {
+        const card = col.cards.find(c => c.id === cardId);
+        if (card) {
+          const voters = card.upvotedBy || [];
+          if (voters.includes(requesterId)) {
+            socket.emit('boardState', board.columns);
+            return;
+          }
+          card.upvotes++;
+          card.upvotedBy = [...voters, requesterId];
+          await saveColumns(boardId, board.columns);
+          io.to(boardId).emit('boardState', board.columns);
+        }
       }
+    } finally {
+      inFlightUpvotes.delete(upvoteKey);
     }
   });
 

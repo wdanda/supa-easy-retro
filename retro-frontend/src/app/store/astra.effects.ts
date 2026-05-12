@@ -36,7 +36,7 @@ export class AstraEffects {
   upvoteCardToNetwork$ = createEffect(() => 
     this.actions$.pipe(
       ofType(AstraActions.upvoteCardOptimistic),
-      tap((action) => this.socketService.upvoteCard(action.boardId, action.columnKey, action.cardId))
+      tap((action) => this.socketService.upvoteCard(action.boardId, action.columnKey, action.cardId, action.userId))
     ),
     { dispatch: false }
   );

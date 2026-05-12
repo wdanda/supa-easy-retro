@@ -5,7 +5,7 @@ import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { CardComponent } from '../card/card.component';
-import { Card, Column } from '../services/socket.service';
+import { Card, Column, SocketService } from '../services/socket.service';
 
 // 1. Import Selector and Actions
 import { Store } from '@ngrx/store';
@@ -24,13 +24,27 @@ export class ColumnComponent implements OnInit, OnDestroy {
   newCardText = '';
   boardId: string | null = null;
   private sub?: Subscription;
+  currentUserId?: string;
 
   private store = inject(Store);
+  private socketService = inject(SocketService);
 
   ngOnInit() {
+    this.currentUserId = this.socketService.getCurrentUserId();
     this.sub = this.store.select(selectActiveBoardMeta).subscribe(meta => {
       this.boardId = meta ? meta.id : null;
     });
+  }
+
+  canDelete(card: Card): boolean {
+    this.currentUserId = this.currentUserId || this.socketService.getCurrentUserId();
+    return !!this.currentUserId && !!card.authorId && card.authorId === this.currentUserId;
+  }
+
+  canUpvote(card: Card): boolean {
+    this.currentUserId = this.currentUserId || this.socketService.getCurrentUserId();
+    if (!this.currentUserId) return false;
+    return !(card.upvotedBy || []).includes(this.currentUserId);
   }
   
   ngOnDestroy() {
@@ -53,21 +67,26 @@ export class ColumnComponent implements OnInit, OnDestroy {
     this.newCardText = '';
   }
 
-  deleteCard(cardId: string) {
+  deleteCard(card: Card) {
     if (!this.boardId) return;
+    if (!this.canDelete(card)) return;
     this.store.dispatch(AstraActions.deleteCardOptimistic({ 
       boardId: this.boardId, 
       columnKey: this.column.key, 
-      cardId 
+      cardId: card.id
     }));
   }
 
-  upvoteCard(cardId: string) {
+  upvoteCard(card: Card) {
     if (!this.boardId) return;
+    this.currentUserId = this.currentUserId || this.socketService.getCurrentUserId();
+    if (!this.currentUserId) return;
+    if (!this.canUpvote(card)) return;
     this.store.dispatch(AstraActions.upvoteCardOptimistic({ 
       boardId: this.boardId, 
       columnKey: this.column.key, 
-      cardId 
+      cardId: card.id,
+      userId: this.currentUserId
     }));
   }
 

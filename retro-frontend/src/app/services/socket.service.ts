@@ -3,7 +3,7 @@ import { io, Socket } from 'socket.io-client';
 import { Store } from '@ngrx/store';
 import * as AstraActions from '../store/astra.actions';
 
-export interface Card { id: string; text: string; upvotes: number; }
+export interface Card { id: string; text: string; upvotes: number; authorId?: string; upvotedBy?: string[]; }
 export interface Column { key: string; name: string; cards: Card[]; }
 export interface BoardMeta { id: string; teamName: string; createdAt: number; }
 
@@ -72,6 +72,7 @@ export class SocketService {
   }
 
   async joinBoard(boardId: string, password: string): Promise<BoardMeta> {
+    await this.ensureUser();
     const res = await fetch(`${this.API_BASE}/api/boards/join`, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ boardId, password })
@@ -105,7 +106,7 @@ export class SocketService {
       
       // Add the "!" operator to bypass the strict undefined check
       this.socket!.once('boardState', onBoardState);
-      this.socket!.emit('joinBoard', { boardId, password });
+      this.socket!.emit('joinBoard', { boardId, password, userId: this.userId });
     });
   }
 
@@ -117,16 +118,24 @@ export class SocketService {
     return res.json();
   }
 
-  addCard(boardId: string, columnKey: string, text: string) { 
-    this.socket?.emit('addCard', { boardId, columnKey, text });
+  getCurrentUserId(): string | undefined {
+    return this.userId;
   }
 
-  deleteCard(boardId: string, columnKey: string, cardId: string) { 
-    this.socket?.emit('deleteCard', { boardId, columnKey, cardId }); 
+  addCard(boardId: string, columnKey: string, text: string) {
+    if (!this.userId) return;
+    this.socket?.emit('addCard', { boardId, columnKey, text, userId: this.userId });
+  }
+
+  deleteCard(boardId: string, columnKey: string, cardId: string) {
+    if (!this.userId) return;
+    this.socket?.emit('deleteCard', { boardId, columnKey, cardId, userId: this.userId });
   }
   
-  upvoteCard(boardId: string, columnKey: string, cardId: string) { 
-    this.socket?.emit('upvoteCard', { boardId, columnKey, cardId }); 
+  upvoteCard(boardId: string, columnKey: string, cardId: string, userId?: string) {
+    const effectiveUserId = userId || this.userId;
+    if (!effectiveUserId) return;
+    this.socket?.emit('upvoteCard', { boardId, columnKey, cardId, userId: effectiveUserId });
   }
   
   reorderCards(boardId: string, columnKey: string, previousIndex: number, currentIndex: number) {

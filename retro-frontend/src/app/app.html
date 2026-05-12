@@ -1,4 +1,8 @@
 <app-header></app-header>
 <main class="app-main">
+	<section class="disclaimer-banner" *ngIf="showDisclaimer" role="status" aria-live="polite">
+		<p class="disclaimer-text">WARNING: Data is potentially stored in a non-secure manner. Anyone with this link can access this board (even if password protected, 100% privacy is not guaranteed). Do not enter confidential or sensitive information. Use at your own risk.</p>
+		<button class="dismiss-btn" type="button" (click)="dismissDisclaimer()">[ X ]</button>
+	</section>
 	<router-outlet></router-outlet>
 </main>

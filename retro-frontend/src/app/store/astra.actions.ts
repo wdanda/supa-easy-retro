@@ -30,7 +30,7 @@ export const deleteCardOptimistic = createAction(
 
 export const upvoteCardOptimistic = createAction(
   '[Board UI] Upvote Card Optimistic',
-  props<{ boardId: string; columnKey: string; cardId: string }>()
+  props<{ boardId: string; columnKey: string; cardId: string; userId: string }>()
 );
 
 export const reorderCardsOptimistic = createAction(

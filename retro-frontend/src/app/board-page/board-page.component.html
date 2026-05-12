@@ -8,10 +8,10 @@
 <div class="password-gate" *ngIf="locked && probeChecked">
   <div class="card">
     <h3>Enter board password</h3>
-    <form (submit)="submit(); $event.preventDefault()">
+    <form (ngSubmit)="submit()">
       <input name="password" [(ngModel)]="password" placeholder="Password" type="password"/>
       <div class="actions">
-        <button type="submit">Enter</button>
+        <button type="submit" [disabled]="isSubmitting">Enter</button>
       </div>
     </form>
     <div class="error" *ngIf="error">{{ error }}</div>

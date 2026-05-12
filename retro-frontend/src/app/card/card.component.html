@@ -2,8 +2,8 @@
   <div class="card-body">
     <div class="card-text retro-quiet">{{ card.text }}</div>
     <div class="card-actions">
-      <button class="upvote" (click)="upvote.emit()" aria-label="Upvote">[+1] <span class="count">{{ card.upvotes }}</span></button>
-      <button class="delete" (click)="delete.emit()" aria-label="Delete">✖</button>
+      <button class="upvote" (click)="upvote.emit()" [disabled]="!canUpvote" aria-label="Upvote">[+1] <span class="count">{{ card.upvotes }}</span></button>
+      <button *ngIf="canDelete" class="delete" (click)="delete.emit()" aria-label="Delete">✖</button>
     </div>
   </div>
 </div>

@@ -58,14 +58,18 @@ export const astraReducer = createReducer(
     )
   })),
 
-  on(AstraActions.upvoteCardOptimistic, (state, { columnKey, cardId }) => ({
+  on(AstraActions.upvoteCardOptimistic, (state, { columnKey, cardId, userId }) => ({
     ...state,
     columns: state.columns.map(column => 
       column.key === columnKey 
         ? { 
             ...column, 
             cards: column.cards.map(c => 
-              c.id === cardId ? { ...c, upvotes: c.upvotes + 1 } : c
+              c.id === cardId
+                ? ((c.upvotedBy || []).includes(userId)
+                  ? c
+                  : { ...c, upvotes: c.upvotes + 1, upvotedBy: [...(c.upvotedBy || []), userId] })
+                : c
             ) 
           }
         : column

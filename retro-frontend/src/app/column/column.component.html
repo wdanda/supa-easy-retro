@@ -11,7 +11,7 @@
 
   <div cdkDropList [cdkDropListData]="column.cards" (cdkDropListDropped)="drop($event)" class="card-list">
     <div *ngFor="let card of column.cards; let i = index" cdkDrag>
-      <app-card [card]="card" (delete)="deleteCard(card.id)" (upvote)="upvoteCard(card.id)"></app-card>
+      <app-card [card]="card" [canDelete]="canDelete(card)" [canUpvote]="canUpvote(card)" (delete)="deleteCard(card)" (upvote)="upvoteCard(card)"></app-card>
     </div>
   </div>
 </div>

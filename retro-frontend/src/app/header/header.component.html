@@ -1,19 +1,39 @@
 <header class="app-header">
-  <button class="hamburger" aria-label="Menu" (click)="goDashboard()" title="Boards">
-    <svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
-  </button>
+  <button class="terminal-btn" aria-label="Create board" (click)="goDashboard()" title="Create board">[ + CREATE BOARD ]</button>
 
   <div class="center">
     <div class="terminal-prompt">
-      <span class="prompt-prefix">&gt; root@ASTRA_OS:~$ ./load_board</span>
-      <span class="prompt-body"> {{ teamName }} <span class="date" *ngIf="createdAt"> - {{ createdAt | date:'yyyy-MM-dd' }}</span></span>
+      <span class="prompt-body">{{ boardStamp }}</span>
     </div>
   </div>
 
-  <button class="export" (click)="exportPdf()" [disabled]="!boardId" title="Export PDF">
-    <svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M5 20h14v-2H5v2zm7-18-5 5h3v6h4v-6h3l-5-5z"/></svg>
-  </button>
-  <button class="theme-toggle" (click)="toggleTheme()" title="Toggle theme">
-    <svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M21.64 13a9 9 0 11-10.64-10.64 7 7 0 0010.64 10.64z"/></svg>
-  </button>
+  <div class="right-actions">
+    <button class="terminal-btn" (click)="exportPdf()" [disabled]="!boardId" title="Export PDF">[ EXPORT ]</button>
+    <button class="terminal-btn" (click)="openAbout()" title="About">[ ABOUT ]</button>
+  </div>
 </header>
+
+<div class="about-backdrop" *ngIf="isAboutOpen" (click)="closeAbout()">
+  <section class="about-modal" role="dialog" aria-modal="true" aria-label="About this app" (click)="$event.stopPropagation()">
+    <div class="about-title">ABOUT THIS PROJECT</div>
+
+    <div class="about-line"><span class="label">Author:</span> Wagner Danda da Silva Filho</div>
+    <div class="about-line">
+      <span class="label">GitHub Repository:</span>
+      <a href="https://github.com/wdanda/supa-easy-retro" target="_blank" rel="noopener noreferrer">https://github.com/wdanda/supa-easy-retro</a>
+    </div>
+    <div class="about-line">This application was built with AI assistance.</div>
+
+    <div class="about-subtitle">PRIMARY TECH STACK</div>
+    <ul class="stack-list">
+      <li>Frontend: Angular 21 (standalone components) + NgRx Store/Effects + RxJS + Angular CDK</li>
+      <li>Backend: Node.js + Express 5 + Socket.IO (real-time board sync)</li>
+      <li>Database: Supabase (PostgreSQL via @supabase/supabase-js)</li>
+      <li>Utilities: bcryptjs (password hashing), pdfkit (board export), express-rate-limit</li>
+      <li>Build/Tooling: TypeScript, Angular CLI/build, npm</li>
+      <li>Deployment: Render (single service hosting API, sockets, and built frontend)</li>
+    </ul>
+
+    <button class="terminal-btn close-btn" (click)="closeAbout()">[ CLOSE ]</button>
+  </section>
+</div>

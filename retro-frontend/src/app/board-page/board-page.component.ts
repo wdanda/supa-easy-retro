@@ -20,6 +20,7 @@ export class BoardPageComponent implements OnInit {
   password = '';
   locked = true;
   probeChecked = false;
+  isSubmitting = false;
   private store = inject(Store);
   
   error: string | null = null;
@@ -66,25 +67,19 @@ export class BoardPageComponent implements OnInit {
     })();
   }
 
-  // async submit() {
-  //   try {
-  //     await this.socket.joinBoard(this.boardId, this.password);
-  //     this.locked = false;
-  //     this.error = null;
-  //   } catch (err: any) {
-  //     this.error = err.message || 'Invalid password';
-  //   }
-  // }
   async submit() {
+    if (this.isSubmitting) return;
+    this.isSubmitting = true;
+    this.cdr.markForCheck();
+    this.cdr.detectChanges();
     try {
-      // Assuming joinBoard returns the meta object when successful with a password
-      const meta = await this.socket.joinBoard(this.boardId, this.password);
-      this.store.dispatch(AstraActions.boardJoinedSuccess({ meta }));
-
+      await this.socket.joinBoard(this.boardId, this.password);
       this.locked = false;
       this.error = null;
     } catch (err: any) {
       this.error = err.message || 'Invalid password';
+      this.isSubmitting = false;
     }
+    this.cdr.markForCheck();
   }
 }

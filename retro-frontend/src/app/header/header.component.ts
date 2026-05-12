@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 
 import { SocketService } from '../services/socket.service';
 import { selectActiveBoardMeta } from '../store/astra.selectors';
+import { BoardMeta } from '../services/socket.service';
 
 @Component({
   selector: 'app-header',
@@ -18,7 +19,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   teamName = 'Retros';
   createdAt: number | null = null;
   boardId: string | null = null;
-  isDark = false;
+  isAboutOpen = false;
   
   private sub?: Subscription;
   private store = inject(Store);
@@ -26,7 +27,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   constructor(private socket: SocketService, private router: Router) {}
 
   ngOnInit() {
-    this.sub = this.store.select(selectActiveBoardMeta).subscribe(b => {
+    this.sub = this.store.select(selectActiveBoardMeta).subscribe((b: BoardMeta | null) => {
       if (b) { 
         this.teamName = b.teamName; 
         this.createdAt = b.createdAt; 
@@ -37,10 +38,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.boardId = null; 
       }
     });
-
-    const stored = localStorage.getItem('retroDarkMode');
-    this.isDark = stored === '1';
-    if (this.isDark) document.documentElement.classList.add('dark-theme');
   }
 
   ngOnDestroy() {
@@ -54,9 +51,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.socket.downloadPdf(this.boardId).catch(err => console.error(err));
   }
 
-  toggleTheme() {
-    this.isDark = !this.isDark;
-    localStorage.setItem('retroDarkMode', this.isDark ? '1' : '0');
-    document.documentElement.classList.toggle('dark-theme', this.isDark);
+  get boardStamp(): string {
+    const when = this.createdAt ? this.createdAt : Date.now();
+    const datePart = new Date(when).toISOString().slice(0, 10);
+    return `${this.teamName.toUpperCase()} | ${datePart}`;
+  }
+
+  openAbout() {
+    this.isAboutOpen = true;
+  }
+
+  closeAbout() {
+    this.isAboutOpen = false;
   }
 }
