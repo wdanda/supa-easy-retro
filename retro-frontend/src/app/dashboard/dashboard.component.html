@@ -13,7 +13,7 @@
     </div>
     <div class="preview">Preview name: <strong>{{ getFinalName() }}</strong></div>
     <input placeholder="Password (optional)" [(ngModel)]="password" type="password" />
-    <div class="disclaimer">Note: Retro boards are automatically deleted after 2 weeks.</div>
+    <div class="disclaimer">Note: Retro boards are automatically deleted after 30 days.</div>
     <div class="quota-status">
       <span *ngIf="!quotaMessage">Your created: {{ createdLocal.length }} / {{ limit }}</span>
       <span class="quota-warning" *ngIf="quotaMessage">{{ quotaMessage }}</span>

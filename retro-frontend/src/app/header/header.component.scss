@@ -15,6 +15,33 @@
   box-shadow: 0 0 0 transparent;
 }
 
+.left-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: 0 0 auto;
+}
+
+.logo-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+}
+
+.nav-logo {
+  display: block;
+  height: 40px;
+  object-fit: contain;
+  margin-left: -8px;
+}
+
+.create-btn {
+  flex: 0 0 auto;
+}
+
 .terminal-btn {
   background: transparent;
   color: var(--text-main);
@@ -89,6 +116,14 @@
   font-family: 'CyberMono', monospace;
 }
 
+.about-logo {
+  display: block;
+  width: min(220px, 70%);
+  height: auto;
+  margin: 0.15rem auto 0.85rem;
+  object-fit: contain;
+}
+
 .about-title {
   color: var(--accent-yellow);
   font-size: 1rem;
@@ -132,8 +167,12 @@
     height: auto;
     min-height: 72px;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: space-between;
     padding: 0.6rem 0.75rem;
+  }
+
+  .left-actions {
+    width: auto;
   }
 
   .center {

@@ -1,5 +1,10 @@
 <header class="app-header">
-  <button class="terminal-btn" aria-label="Create board" (click)="goDashboard()" title="Create board">[ + CREATE BOARD ]</button>
+  <div class="left-actions">
+    <div class="logo-mark" aria-hidden="true">
+      <img src="/logo.png" alt="Supa Easy Retro" class="nav-logo" />
+    </div>
+    <button class="terminal-btn create-btn" aria-label="Create board" (click)="goDashboard()" title="Create board">[ + CREATE BOARD ]</button>
+  </div>
 
   <div class="center">
     <div class="terminal-prompt">
@@ -15,6 +20,7 @@
 
 <div class="about-backdrop" *ngIf="isAboutOpen" (click)="closeAbout()">
   <section class="about-modal" role="dialog" aria-modal="true" aria-label="About this app" (click)="$event.stopPropagation()">
+    <img src="/logo.png" alt="Supa Easy Retro" class="about-logo" />
     <div class="about-title">ABOUT THIS PROJECT</div>
 
     <div class="about-line"><span class="label">Author:</span> Wagner Danda da Silva Filho</div>
@@ -22,7 +28,7 @@
       <span class="label">GitHub Repository:</span>
       <a href="https://github.com/wdanda/supa-easy-retro" target="_blank" rel="noopener noreferrer">https://github.com/wdanda/supa-easy-retro</a>
     </div>
-    <div class="about-line">This application was built with AI assistance.</div>
+    <div class="about-line">Built with AI assistance. Contains known technical debt. Due to token constraints on this side project, patches for these issues are not guaranteed.</div>
 
     <div class="about-subtitle">PRIMARY TECH STACK</div>
     <ul class="stack-list">
