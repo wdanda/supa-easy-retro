@@ -1,5 +1,5 @@
 <div class="board">
-  <div class="column" *ngFor="let col of columns$ | async">
+  <div class="column" *ngFor="let col of columns$ | async; trackBy: trackByColumnKey">
     <app-column [column]="col"></app-column>
   </div>
 </div>

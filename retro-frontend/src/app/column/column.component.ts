@@ -101,4 +101,8 @@ export class ColumnComponent implements OnInit, OnDestroy {
     }
   }
 
+  trackByCardId(_index: number, card: Card): string {
+    return card.id;
+  }
+
 }

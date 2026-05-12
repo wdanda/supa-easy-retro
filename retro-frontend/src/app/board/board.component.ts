@@ -35,4 +35,8 @@ export class BoardComponent implements OnInit {
     // this.socketService.setSearchTerm(target.value);
     this.store.dispatch(AstraActions.updateSearchTerm({ term: target.value }));
   }
+
+  trackByColumnKey(_index: number, column: Column): string {
+    return column.key;
+  }
 }
