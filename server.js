@@ -309,8 +309,8 @@ app.get('/healthz', async (req, res) => {
   return res.json({ status: 'ok' });
 });
 
-// SPA fallback — serve index.html for all non-API routes
-app.get('*', (req, res) => {
+// SPA fallback — serve index.html for all non-API GET routes
+app.get(/^(?!\/api\/).*/, (req, res) => {
   res.sendFile(path.join(FRONTEND_DIST, 'index.html'));
 });
 
