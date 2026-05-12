@@ -185,7 +185,7 @@ app.post('/api/boards/join', async (req, res) => {
   if (board.password_hash) {
     if (!bcrypt.compareSync(password || '', board.password_hash)) return res.status(403).json({ error: 'Incorrect password' });
   }
-  res.json({ boardId, teamName: board.team_name, createdAt: board.created_at, expiresAt: board.expires_at });
+  res.json({ boardId, teamName: board.team_name, createdAt: board.created_at, expiresAt: board.expires_at, ownerId: board.owner });
 });
 
 app.delete('/api/boards/:boardId', async (req, res) => {
@@ -273,8 +273,10 @@ io.on('connection', (socket) => {
     if (col) {
       const targetCard = col.cards.find(c => c.id === cardId);
       if (!targetCard) return;
-      if (!targetCard.authorId || targetCard.authorId !== requesterId) {
-        socket.emit('error', 'Only the creator can delete this card');
+      const isBoardOwner = board.owner && board.owner === requesterId;
+      const isCardAuthor = targetCard.authorId && targetCard.authorId === requesterId;
+      if (!isCardAuthor && !isBoardOwner) {
+        socket.emit('error', 'Only the creator or board owner can delete this card');
         socket.emit('boardState', board.columns);
         return;
       }

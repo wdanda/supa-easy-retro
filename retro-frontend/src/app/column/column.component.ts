@@ -23,6 +23,7 @@ export class ColumnComponent implements OnInit, OnDestroy {
   @Input() column!: Column;
   newCardText = '';
   boardId: string | null = null;
+  boardOwnerId: string | null = null;
   private sub?: Subscription;
   currentUserId?: string;
 
@@ -33,12 +34,16 @@ export class ColumnComponent implements OnInit, OnDestroy {
     this.currentUserId = this.socketService.getCurrentUserId();
     this.sub = this.store.select(selectActiveBoardMeta).subscribe(meta => {
       this.boardId = meta ? meta.id : null;
+      this.boardOwnerId = meta?.ownerId || null;
     });
   }
 
   canDelete(card: Card): boolean {
     this.currentUserId = this.currentUserId || this.socketService.getCurrentUserId();
-    return !!this.currentUserId && !!card.authorId && card.authorId === this.currentUserId;
+    if (!this.currentUserId) return false;
+    const isCardAuthor = !!card.authorId && card.authorId === this.currentUserId;
+    const isBoardOwner = !!this.boardOwnerId && this.boardOwnerId === this.currentUserId;
+    return isCardAuthor || isBoardOwner;
   }
 
   canUpvote(card: Card): boolean {

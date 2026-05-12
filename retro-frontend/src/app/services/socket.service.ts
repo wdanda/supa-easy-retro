@@ -5,7 +5,7 @@ import * as AstraActions from '../store/astra.actions';
 
 export interface Card { id: string; text: string; upvotes: number; authorId?: string; upvotedBy?: string[]; }
 export interface Column { key: string; name: string; cards: Card[]; }
-export interface BoardMeta { id: string; teamName: string; createdAt: number; }
+export interface BoardMeta { id: string; teamName: string; createdAt: number; ownerId?: string; }
 
 @Injectable({ providedIn: 'root' })
 export class SocketService {
@@ -83,7 +83,8 @@ export class SocketService {
     const meta: BoardMeta = {
       id: rawMeta.boardId,
       teamName: rawMeta.teamName,
-      createdAt: rawMeta.createdAt
+      createdAt: rawMeta.createdAt,
+      ownerId: rawMeta.ownerId
     };
 
     if (!this.socket) {
@@ -110,7 +111,7 @@ export class SocketService {
     });
   }
 
-  async probeBoard(boardId: string, password: string): Promise<{ boardId: string; teamName: string; createdAt: number }> {
+  async probeBoard(boardId: string, password: string): Promise<{ boardId: string; teamName: string; createdAt: number; ownerId?: string }> {
     const res = await fetch(`${this.API_BASE}/api/boards/join`, {
       method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ boardId, password })
     });

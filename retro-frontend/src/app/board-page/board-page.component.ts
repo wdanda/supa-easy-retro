@@ -36,7 +36,8 @@ export class BoardPageComponent implements OnInit {
         const meta = { 
           id: rawMeta.boardId, 
           teamName: rawMeta.teamName, 
-          createdAt: rawMeta.createdAt 
+          createdAt: rawMeta.createdAt,
+          ownerId: rawMeta.ownerId
         };
 
         // DISPATCH THE NETWORK SUCCESS ACTION HERE
@@ -73,7 +74,8 @@ export class BoardPageComponent implements OnInit {
     this.cdr.markForCheck();
     this.cdr.detectChanges();
     try {
-      await this.socket.joinBoard(this.boardId, this.password);
+      const meta = await this.socket.joinBoard(this.boardId, this.password);
+      this.store.dispatch(AstraActions.boardJoinedSuccess({ meta }));
       this.locked = false;
       this.error = null;
     } catch (err: any) {
