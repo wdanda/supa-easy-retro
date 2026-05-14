@@ -1,0 +1,26 @@
+services:
+  backend:
+    image: node:22
+    working_dir: /app
+    volumes:
+      - ./:/app
+    ports:
+      - "4000:4000"
+    environment:
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+    command: npm start
+    stdin_open: true
+    tty: true
+
+  frontend:
+    image: node:22
+    working_dir: /app/retro-frontend
+    volumes:
+      - ./:/app
+    ports:
+      - "4001:4001"
+    environment:
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+    command: sh -c "npm install && npm start"
+    stdin_open: true
+    tty: true
